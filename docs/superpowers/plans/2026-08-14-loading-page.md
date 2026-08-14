@@ -223,7 +223,7 @@ Run:
 
 ```powershell
 cd 'C:\Users\shenkang\.dsh\plugins\dsh-catppuccin-theme'
-node --test test/
+node --test test/splash.test.js
 ```
 
 Expected: 全部失败，报错为 `Cannot find module '...\lib\splash.js'`（模块尚不存在）。若报别的错，停下来排查测试文件本身。
@@ -384,7 +384,7 @@ Run:
 
 ```powershell
 cd 'C:\Users\shenkang\.dsh\plugins\dsh-catppuccin-theme'
-node --test test/
+node --test test/splash.test.js
 ```
 
 Expected: 13 个测试全部 PASS。
@@ -536,7 +536,7 @@ export function apply(ctx) {
 
 ```json
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test test/splash.test.jssplash.test.js"
   },
 ```
 
@@ -604,6 +604,24 @@ $html -match 'id="cppc-splash"' -and $html -match '__cppc_splash_dismiss' -and $
 ```
 
 Expected: `True`。若为 `False`，说明宿主变更未生效（未重启）或注入异常，回到 Task 5 排查。
+
+---
+
+### Task 4b: 代码评审修复（评审后补入）
+
+代码质量审查发现的必修问题及修复：
+
+1. `scopeSvg` 盲替换会改坏 `class="is-animated"` 属性（真实 logo.svg 的 6 个
+   wedge path 因此丢失彩虹动画）并误伤 `href="#red"` 等引用 → 改写范围
+   收敛到 `<style>...</style>` 块内；height 移除正则增强为
+   `\s+height=["']40["']`。
+2. `injectSplash` 的 body 定位会误命中 `<!-- <body> -->` 注释 → 新增
+   `findBodyTag` 辅助函数跳过注释内的匹配。
+3. `splashStyle` 输出改 `\n` 连接（devtools/diff 可读性）。
+4. 新增 3 个回归用例（style 块收敛、注释 body、真实 logo.svg 集成），
+   测试总数 13 → 16。
+
+提交：`fix: scope svg style rewrites and harden body anchor`
 
 ---
 
