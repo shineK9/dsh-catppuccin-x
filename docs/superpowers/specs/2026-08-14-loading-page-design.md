@@ -126,7 +126,7 @@ settings doc (flavor) ──► tapIndex 每次 index 响应时读取
 | 内核启动失败（fail-loud） | 自愈脚本检测失败文案，立即移除 splash，失败报告可见 |
 | 观察逻辑失效（任何原因） | 12s 硬超时强制移除 |
 | 设置文档无 flavor | 默认 Mocha |
-| `prefers-reduced-motion` | logo 轮转与呼吸动画停用，静态显示 |
+| `prefers-reduced-motion` | logo 六色 fill 循环与呼吸动画停用，静态显示 |
 
 ## 7. 测试与验收
 

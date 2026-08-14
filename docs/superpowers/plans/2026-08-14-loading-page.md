@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 为 dsh-catppuccin-theme 新增自定义 DSH 首屏 loading 页：内联 logo.svg（彩虹轮转）+ 四个 flavor 呼吸点，底色跟随已保存 flavor，浏览器第一帧即生效，启动完成自动淡出。
+**Goal:** 为 dsh-catppuccin-theme 新增自定义 DSH 首屏 loading 页：内联 logo.svg（六色 fill 循环动画）+ 四个 flavor 呼吸点，底色跟随已保存 flavor，浏览器第一帧即生效，启动完成自动淡出。
 
 **Architecture:** 宿主端 `lib/index.js` 通过官方 `webServer.tapIndex()` 钩子在每次 index.html 响应中注入自持 splash（`<style>` + 标记 + 自愈 `<script>`），纯函数逻辑抽到新模块 `lib/splash.js` 以便 node:test 单测；客户端 bundle 完全不动。
 
@@ -535,7 +535,7 @@ export function apply(ctx) {
 
 ```json
   "scripts": {
-    "test": "node --test test/splash.test.jssplash.test.js"
+    "test": "node --test test/splash.test.js"
   },
 ```
 
