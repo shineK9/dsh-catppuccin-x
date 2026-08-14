@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import {
   DOT_COLORS,
   SPLASH_PALETTE,
@@ -117,4 +118,37 @@ test('SPLASH_PALETTE: 四个 flavor 键齐全', () => {
     assert.equal(typeof c.text, 'string')
     assert.equal(typeof c.red, 'string')
   }
+})
+
+test('scopeSvg: 仅改写 style 块，属性与引用不受影响', () => {
+  const svg = '<svg><style>:root{--x:1} #red{opacity:1} .is-animated{animation:none}</style>'
+    + '<path id="red" class="is-animated" d="M0 0"/>'
+    + '<use href="#red"/>'
+    + '<text>.is-animated</text>'
+    + '</svg>'
+  const out = scopeSvg(svg)
+  assert.ok(out.includes('#cppc-splash{--x:1}'))
+  assert.ok(out.includes('#cppc-splash #red{opacity:1}'))
+  assert.ok(out.includes('#cppc-splash .is-animated{animation:none}'))
+  assert.ok(out.includes('class="is-animated"'))
+  assert.ok(out.includes('href="#red"'))
+  assert.ok(out.includes('<text>.is-animated</text>'))
+})
+
+test('injectSplash: 注释内的 <body> 不误命中', () => {
+  const html = '<!doctype html><html><head></head><!-- <body> --><body class="x"><div id="root"></div></body></html>'
+  const out = injectSplash(html, 'mocha', SAMPLE_SVG)
+  assert.ok(out.includes('<!-- <body> --><body class="x"><style>'))
+  assert.ok(out.endsWith('<div id="root"></div></body></html>'))
+})
+
+test('scopeSvg: 真实 logo.svg 内联后动画类与 id 完整', () => {
+  const svg = readFileSync(new URL('../logo.svg', import.meta.url), 'utf8')
+  const out = scopeSvg(svg)
+  assert.ok(out.includes('#cppc-splash .is-animated {'))
+  assert.ok(out.includes('#cppc-splash #red {'))
+  assert.ok((out.match(/class="is-animated"/g) || []).length > 0)
+  assert.ok(!out.includes('class="#cppc-splash'))
+  assert.ok(out.includes('id="mauve"'))
+  assert.ok(!out.includes('height="40"'))
 })
