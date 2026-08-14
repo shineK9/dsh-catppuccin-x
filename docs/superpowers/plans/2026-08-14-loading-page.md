@@ -446,8 +446,8 @@ export const name = 'catppuccin-theme'
 /** 与浏览器端 SETTINGS_NS 对应的设置命名空间。 */
 const SETTINGS_NS = settingsNamespace('dsh-catppuccin-theme')
 
-/** logo.svg 绝对路径（与 index.js 同目录）。 */
-const LOGO_PATH = join(dirname(fileURLToPath(import.meta.url)), 'logo.svg')
+/** logo.svg 绝对路径（包根目录，index.js 的上一级）；导出供回归测试断言。 */
+export const LOGO_PATH = fileURLToPath(new URL('../logo.svg', import.meta.url))
 
 /** 个性化设置 schema；默认值保证快照始终完整。 */
 const PersoSettingsSchema = z.object({
@@ -622,6 +622,19 @@ Expected: `True`。若为 `False`，说明宿主变更未生效（未重启）�
    测试总数 13 → 16。
 
 提交：`fix: scope svg style rewrites and harden body anchor`
+
+---
+
+### Task 5b: LOGO_PATH 根目录修复（评审后补入）
+
+质量审查发现 Critical：`LOGO_PATH` 原先解析到 `lib/logo.svg`，而 logo.svg
+在包根目录，导致 splash 静默永不注入（16 个单测无法覆盖该路径）。
+
+修复：`LOGO_PATH = fileURLToPath(new URL('../logo.svg', import.meta.url))`
+并导出；新增回归用例（existsSync + 内容断言 + 路径结尾断言），测试总数
+16 → 17。
+
+提交：`fix: resolve logo.svg from package root`
 
 ---
 
