@@ -1,0 +1,45 @@
+{
+  "name": "dsh-catppuccin-theme",
+  "version": "0.2.6",
+  "description": "WebUI 个性化插件：Catppuccin 全 flavor 主题（Latte/Frappé/Macchiato/Mocha）、强调色、UI/代码字体手动填写；设置通过 Host 设置文档持久化，重启后自动恢复。",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./typert": {
+      "default": "./lib/typert.host.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "catppuccin",
+    "theme",
+    "font"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-settings": "0.1.0-rc.6",
+    "@deepseek-ai/schemastery": "^3.18.1",
+    "zod": "^4.4.3"
+  }
+}
