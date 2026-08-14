@@ -1,6 +1,6 @@
 {
   "name": "dsh-catppuccin-theme",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "WebUI 个性化插件：Catppuccin 全 flavor 主题（Latte/Frappé/Macchiato/Mocha）、强调色、UI/代码字体手动填写；设置通过 Host 设置文档持久化，重启后自动恢复。",
   "type": "module",
   "main": "lib/index.js",
@@ -19,9 +19,13 @@
   },
   "files": [
     "lib",
+    "logo.svg",
     "cordis.patch.yml"
   ],
   "license": "MIT",
+  "scripts": {
+    "test": "node --test test/splash.test.js"
+  },
   "keywords": [
     "dsh",
     "dsh-plugin",
