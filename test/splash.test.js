@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import {
   DOT_COLORS,
   SPLASH_PALETTE,
@@ -10,6 +10,7 @@ import {
   splashMarkup,
   splashStyle
 } from '../lib/splash.js'
+import { LOGO_PATH, name as hostName } from '../lib/index.js'
 
 const SAMPLE_HTML = '<!doctype html><html><head><title>t</title></head><body><div id="root"></div></body></html>'
 const SAMPLE_SVG = '<svg viewBox="0 0 1042 1042" height="40">'
@@ -151,4 +152,12 @@ test('scopeSvg: 真实 logo.svg 内联后动画类与 id 完整', () => {
   assert.ok(!out.includes('class="#cppc-splash'))
   assert.ok(out.includes('id="mauve"'))
   assert.ok(!out.includes('height="40"'))
+})
+
+test('LOGO_PATH 指向包根目录的 logo.svg 且可读', () => {
+  assert.equal(hostName, 'catppuccin-theme')
+  assert.ok(existsSync(LOGO_PATH))
+  const svg = readFileSync(LOGO_PATH, 'utf8')
+  assert.ok(svg.includes('<svg'))
+  assert.ok(LOGO_PATH.replace(/\\/g, '/').endsWith('/logo.svg'))
 })
