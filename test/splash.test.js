@@ -155,7 +155,7 @@ test('scopeSvg: 真实 logo.svg 内联后动画类与 id 完整', () => {
 })
 
 test('LOGO_PATH 指向包根目录的 logo.svg 且可读', () => {
-  assert.equal(hostName, 'catppuccin-theme')
+  assert.equal(hostName, 'catppuccin-x')
   assert.ok(existsSync(LOGO_PATH))
   const svg = readFileSync(LOGO_PATH, 'utf8')
   assert.ok(svg.includes('<svg'))
