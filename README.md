@@ -65,6 +65,20 @@ pnpm add dsh-catppuccin-x
 
 所有设置自动保存，刷新页面或重启 Web 后仍然保留。
 
+**推荐字体**（可直接复制到设置页输入框）：
+
+- 界面字体 (UI)：
+
+  ```
+  "Literata", "LXGW WenKai", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+  ```
+
+- 代码字体 (Code)：
+
+  ```
+  Hasklig Nerd Font
+  ```
+
 ## 🛠 开发
 
 ```
