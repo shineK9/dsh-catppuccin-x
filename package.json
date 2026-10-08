@@ -24,7 +24,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "test": "node --test test/splash.test.js"
+    "test": "node --test"
   },
   "keywords": [
     "dsh",
