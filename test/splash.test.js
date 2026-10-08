@@ -22,6 +22,7 @@ const SAMPLE_SVG = '<svg viewBox="0 0 1042 1042" height="40">'
 test('splashFlavor: 合法 flavor 原样返回', () => {
   assert.equal(splashFlavor('mocha'), 'mocha')
   assert.equal(splashFlavor('latte'), 'latte')
+  assert.equal(splashFlavor('coldbrew'), 'coldbrew')
   assert.equal(splashFlavor('macchiato'), 'macchiato')
   assert.equal(splashFlavor('frappe'), 'frappe')
 })
@@ -82,6 +83,14 @@ test('injectSplash: latte 配色', () => {
   assert.ok(out.includes('--red:#d20f39'))
 })
 
+test('injectSplash: coldbrew 配色（自造浅色 flavor，不得回退深色）', () => {
+  const out = injectSplash(SAMPLE_HTML, 'coldbrew', SAMPLE_SVG)
+  assert.ok(out.includes('background:#fbfcfe'))
+  assert.ok(out.includes('--mantle:#f1f6fc'))
+  assert.ok(out.includes('--text:#3d4a63'))
+  assert.ok(!out.includes('background:#1e1e2e'))
+})
+
 test('injectSplash: 非法 flavor 回退 mocha 配色', () => {
   const out = injectSplash(SAMPLE_HTML, 'weird', SAMPLE_SVG)
   assert.ok(out.includes('background:#1e1e2e'))
@@ -111,8 +120,8 @@ test('splashMarkup: 包含全部四个点且顺序稳定', () => {
   assert.equal((markup.match(/cppc-dot"/g) || []).length, 4)
 })
 
-test('SPLASH_PALETTE: 四个 flavor 键齐全', () => {
-  for (const id of ['latte', 'frappe', 'macchiato', 'mocha']) {
+test('SPLASH_PALETTE: 五个 flavor 键齐全', () => {
+  for (const id of ['latte', 'coldbrew', 'frappe', 'macchiato', 'mocha']) {
     const c = SPLASH_PALETTE[id]
     assert.equal(typeof c.base, 'string')
     assert.equal(typeof c.mantle, 'string')

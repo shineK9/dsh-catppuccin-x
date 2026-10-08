@@ -2,11 +2,12 @@
 
 > DeepSeek Harness WebUI 个性化插件 —— Catppuccin 全 flavor 主题、强调色、自定义字体与品牌化首屏加载页。
 
-基于 [Catppuccin](https://catppuccin.com/) 官方调色板，为 DeepSeek Harness Web 界面提供完整的个性化能力：四套 flavor 主题一键切换、六种强调色叠加、UI / 代码字体自定义，以及跟随所选 flavor 变色的启动加载页。设置通过 Host 设置文档持久化，重启后自动恢复，全程无需修改官方源码。
+基于 [Catppuccin](https://catppuccin.com/) 官方调色板，为 DeepSeek Harness Web 界面提供完整的个性化能力：五套 flavor 主题（官方四套 + 自造浅色 Coldbrew）一键切换、六种强调色叠加、UI / 代码字体自定义，以及跟随所选 flavor 变色的启动加载页。设置通过 Host 设置文档持久化，重启后自动恢复，全程无需修改官方源码。
 
 ## ✨ 功能特性
 
-- **四套 Catppuccin flavor 主题**：Latte（浅色）/ Frappé / Macchiato / Mocha（深色），完整映射 DSW 主题 token（`--dsw-*` alias 全量覆盖）
+- **五套 Catppuccin flavor 主题**：Latte（浅色）/ Coldbrew（浅色，本项目自造）/ Frappé / Macchiato / Mocha（深色），完整映射 DSW 主题 token（`--dsw-*` alias 全量覆盖）
+- **Coldbrew（冷萃）**：基于 Latte 重做的浅色 flavor —— 底色从中性灰换成近白冷调（base `#fbfcfe`、侧栏 `#f1f6fc`），浅色模式的边框 / chip / 代码底改用冷蓝灰 veil（`#5b76a8`）而不是灰字混色，整屏去灰提亮；正文对比度 8.68:1（Latte 为 7.45:1），观感清爽、干净
 - **六种强调色**：淡紫 / 蓝 / 绿 / 蜜桃 / 红 / 粉，基于 `theme.overrideTokens` 叠加层实现，可叠加在任意活动主题之上
 - **自定义字体**：界面字体（UI）与代码字体（Code）分别填写 font-family 列表，覆盖 `:root` 字体变量，带实时预览
 - **品牌字标跟随强调色**：顶部 "harness" 品牌徽章自动采用当前强调色，深色 flavor 下依然清晰可读
@@ -59,7 +60,7 @@ pnpm add dsh-catppuccin-x
 
 打开 Web 设置页，左侧选择 **Catppuccin** 分区：
 
-1. **主题**：点击 Latte / Frappé / Macchiato / Mocha 卡片切换 flavor（同步改变启动页配色）
+1. **主题**：点击 Latte / Coldbrew / Frappé / Macchiato / Mocha 卡片切换 flavor（同步改变启动页配色）
 2. **强调色**：点击色点选择强调色，品牌主色、按钮、选中态等同步变化
 3. **字体**：在「界面字体 (UI)」「代码字体 (Code)」输入框中填写 font-family 列表（逗号分隔），回车或点击「应用」生效，可随时「重置字体为默认」
 
