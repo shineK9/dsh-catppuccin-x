@@ -212,6 +212,53 @@ test('running text shimmer is a three-colour primary gradient flowing across the
   }
 })
 
+test('remaining built-in surfaces are themed (floating UI / status / diff / shiki)', async () => {
+  const { registered } = await probe('coldbrew', 'mauve')
+  const theme = registered.find((item) => item.id === 'catppuccin-coldbrew')
+  const tokens = theme.tokens
+
+  // 链接 / tooltip / toast / 菜单：内置用中性灰，必须换成 Catppuccin 层色
+  assert.equal(tokens['--dsw-alias-link'], '#1e66f5')
+  assert.equal(tokens['--dsw-alias-tooltip-bg'], '#3d4a63')
+  assert.equal(tokens['--dsw-alias-toast-bg'], '#3d4a63')
+  assert.equal(tokens['--dsw-alias-toast-label'], '#fbfcfe')
+  assert.ok(String(tokens['--dsw-menu-surface-fill']).includes('color-mix'))
+  assert.equal(tokens['--dsw-alias-menu-icon'], '#667390')
+
+  // 状态文字 / diff / 静态色板：内置 amber/绿红两套色系 → Catppuccin
+  assert.equal(tokens['--dsw-alias-state-warn-label'], '#df8e1d')
+  assert.equal(tokens['--dsw-alias-label-error'], '#d20f39')
+  assert.ok(String(tokens['--dsw-alias-code-diff-added']).includes('#40a02b'))
+  assert.ok(String(tokens['--dsw-alias-file-diff-added-marker']).includes('#40a02b'))
+  assert.ok(String(tokens['--dsw-alias-file-diff-deleted-marker']).includes('#d20f39'))
+  assert.equal(tokens['--dsw-static-green-500'], '#40a02b')
+  assert.equal(tokens['--dsw-static-red-600'], '#d20f39')
+  assert.equal(tokens['--dsw-static-amber-600'], '#df8e1d')
+
+  // Shiki 语法高亮
+  assert.equal(tokens['--shiki-token-keyword'], '#8839ef')
+  assert.equal(tokens['--shiki-token-string'], '#40a02b')
+  assert.equal(tokens['--shiki-token-function'], '#1e66f5')
+  assert.equal(tokens['--shiki-token-constant'], '#fe640b')
+
+  // onboarding 渐变 / 思考块渐隐
+  assert.ok(String(tokens['--dsw-gradient-onboarding-blue-stops']).includes('#1e66f5'))
+  assert.ok(String(tokens['--dsw-linear-gradient-think']).includes('#fbfcfe'))
+  assert.ok(String(tokens['--cppc-hovercard-bg']).includes('#3d4a63'))
+
+  // 强调色相关项跟随当前强调色（peach）
+  const { overrides } = await probe('coldbrew', 'peach')
+  const patch = overrides.find((item) => item.id === 'catppuccin-x-accent').patch
+  assert.equal(patch['--dsw-alias-label-deep-diving'].light, '#fe640b')
+  assert.equal(patch['--dsw-alias-onboarding-accent'].light, '#fe640b')
+  assert.equal(patch['--dsw-alias-bg-document-selection'].light, 'color-mix(in srgb, #fe640b 30%, transparent)')
+
+  // hovercard / 文本选择靠静态 CSS 覆盖（哈希类名兜底 + ::selection）
+  const bundle = await readFile(new URL('../lib/client.js', import.meta.url), 'utf8')
+  assert.ok(bundle.includes('[class*="_card_"]{--dsw-hovercard-bg:var(--cppc-hovercard-bg'))
+  assert.ok(bundle.includes('::selection{background:color-mix(in srgb,var(--dsw-alias-brand-primary) 26%'))
+})
+
 test('settings page no longer renders font inputs', async () => {
   const definition = await loadBundle()
   let page = null
