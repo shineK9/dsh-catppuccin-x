@@ -81,7 +81,13 @@ pnpm add dsh-catppuccin-x
 ├── test/
 │   ├── splash.test.js    # splash 模块回归测试
 │   ├── client.test.js    # 样式归属契约回归
-│   └── theme.test.js     # 字体下线 / 徽章前景阈值 / 文字流光回归
+│   └── theme.test.js     # 字体下线 / 徽章前景阈值 / 文字流光 / 内置 UI 面回归
+├── scripts/
+│   └── extract-theme-tokens.mjs  # 从 app.asar 重新抽取 token 参考表
+├── docs/reference/
+│   ├── dsh-theme-tokens.md       # 507 个可覆盖 token 总表（含浅/深色值与插件覆盖标记）
+│   ├── dsh-theme-tokens.html     # 同一份数据的可搜索查看器
+│   └── README.md                 # 文档说明与刷新方式
 ├── cordis.patch.yml      # profile 层插入声明（bundle patch）
 ├── logo.svg              # 启动页 Catppuccin logo
 └── assests/              # 截图素材
@@ -91,6 +97,12 @@ pnpm add dsh-catppuccin-x
 
 ```bash
 node --test
+```
+
+主题 token 参考表（DSH 升级后刷新）：
+
+```bash
+node scripts/extract-theme-tokens.mjs "<path-to-app.asar>"
 ```
 
 ## 📄 许可
