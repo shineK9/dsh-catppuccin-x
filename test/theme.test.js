@@ -8,6 +8,9 @@
  *    2.99:1，几乎打平；pink（#ea76cb）白字 2.64:1、深字 3.04:1，深字明显更清楚。
  *    实现只在深字比白字高出 0.1 个对比度点时才切深字，本测试独立复算对比度，
  *    验证每种 flavor × 强调色都满足这条阈值语义。
+ * 3. **执行中文字流光** —— TextShimmer 的 content 改为「蓝 ↔ 强调色 ↔ 紫」三色
+ *    渐变并循环流动；旧版 `[data-text-shimmer]` 选择器在 0.2.x 已失效，测试锁定
+ *    新结构（[data-shimmer] > span:first-child + 隐藏 [inert] 装饰层）与三色取值。
  */
 
 import test from 'node:test'
@@ -177,6 +180,36 @@ test('the reported case — coldbrew + peach — now uses light glyphs on the or
   const pink = await probe('coldbrew', 'pink')
   const pinkOverride = pink.overrides.find((item) => item.id === 'catppuccin-x-accent')
   assert.equal(pinkOverride.patch['--dsw-alias-label-primary-foreground'].light, '#3d4a63')
+})
+
+test('running text shimmer is a three-colour primary gradient flowing across the whole text', async () => {
+  const bundle = await readFile(new URL('../lib/client.js', import.meta.url), 'utf8')
+  // 结构：新版 TextShimmer 的 content 是 root 的第一个 span，decoration 用 [inert] 隐藏。
+  assert.ok(bundle.includes('[data-shimmer] > span:first-child'), 'content span must be the gradient target')
+  assert.ok(bundle.includes('[data-shimmer] [inert]{display:none}'), 'native sweep copy must be hidden')
+  assert.ok(bundle.includes('var(--cppc-shimmer-1)'), 'gradient must use the palette variables')
+  assert.ok(bundle.includes('-webkit-background-clip:text'), 'gradient must be clipped to the glyphs')
+  assert.ok(bundle.includes('animation:cppc-text-flow 4s linear infinite'), 'gradient must flow')
+  assert.equal(bundle.includes('[data-text-shimmer]'), false, 'the 0.1.7 selector is dead in 0.2.x and must be gone')
+
+  const expected = {
+    'coldbrew+peach': ['#1e66f5', '#fe640b', '#8839ef'],
+    'coldbrew+mauve': ['#1e66f5', '#8839ef', '#fe640b'],
+    'coldbrew+blue': ['#1e66f5', '#8839ef', '#fe640b'],
+    'mocha+peach': ['#89b4fa', '#fab387', '#cba6f7'],
+    'mocha+mauve': ['#89b4fa', '#cba6f7', '#fab387']
+  }
+  for (const [key, colors] of Object.entries(expected)) {
+    const [flavor, accent] = key.split('+')
+    const { registered, overrides } = await probe(flavor, accent)
+    const theme = registered.find((item) => item.id === 'catppuccin-' + flavor)
+    const override = overrides.find((item) => item.id === 'catppuccin-x-accent')
+    const actual = [1, 2, 3].map((index) => override === undefined
+      ? theme.tokens['--cppc-shimmer-' + index]
+      : override.patch['--cppc-shimmer-' + index].light)
+    assert.deepEqual(actual, colors, key)
+    assert.equal(new Set(actual).size, 3, 'three distinct colours expected for ' + key)
+  }
 })
 
 test('settings page no longer renders font inputs', async () => {

@@ -10,6 +10,7 @@
 - **Coldbrew（冷萃）**：基于 Latte 重做的浅色 flavor —— 底色从中性灰换成近白冷调（base `#fbfcfe`、侧栏 `#f1f6fc`），浅色模式的边框 / chip / 代码底改用冷蓝灰 veil（`#5b76a8`）而不是灰字混色，整屏去灰提亮；正文对比度 8.68:1（Latte 为 7.45:1），观感清爽、干净
 - **六种强调色**：淡紫 / 蓝 / 绿 / 蜜桃 / 红 / 粉，基于 `theme.overrideTokens` 叠加层实现，可叠加在任意活动主题之上
 - **品牌字标跟随强调色**：顶部 "harness" 品牌徽章自动采用当前强调色；徽章字色按 WCAG 对比度阈值（`onColor()`）在浅色字 / 深色字之间二选一 —— 深字须明显更清楚才启用，所以橙底蜜桃拿到浅色字、浅粉底粉红仍拿深色字，深浅 flavor 都不再出现「深字压深底」
+- **执行中文字流光**：步骤标题 / 运行状态 / 工具行等 `TextShimmer` 文字染成「蓝 ↔ 强调色 ↔ 紫」三色主色渐变，4s 循环流动；强调色切换时中间色同步替换，重绘只动 `background-position`，不打扰宿主动画
 - **品牌化首屏加载页**：内联 Catppuccin logo + 四个呼吸点，随已保存的 flavor 自动变色，logo 缺失时安全降级为默认加载页
 - **设置面板「Catppuccin」**：在 Web 设置页注册专属分区，设置经 Typert RPC 持久化到 Host 设置文档，刷新 / 重启自动恢复
 - **兼容内置同名主题**：与 DSH 内置 Catppuccin 主题共存时自动跳过重复注册，不冲突
@@ -71,13 +72,13 @@ pnpm add dsh-catppuccin-x
 ```
 ├── lib/
 │   ├── index.js          # 宿主半：设置命名空间注册 + catppuccinTheme 服务 + splash 注入
-│   ├── client.js         # 浏览器端：flavor 注册 / 强调色叠加 / 徽章前景阈值 / 设置面板
+│   ├── client.js         # 浏览器端：flavor 注册 / 强调色叠加 / 徽章前景阈值 / 文字流光 / 设置面板
 │   ├── splash.js         # 首屏加载页纯函数模块（可独立测试）
 │   └── typert.host.js    # Typert RPC 清单（与客户端 remote 调用一一对应）
 ├── test/
 │   ├── splash.test.js    # splash 模块回归测试
 │   ├── client.test.js    # 样式归属契约回归
-│   └── theme.test.js     # 字体下线 + 徽章前景色阈值回归
+│   └── theme.test.js     # 字体下线 / 徽章前景阈值 / 文字流光回归
 ├── cordis.patch.yml      # profile 层插入声明（bundle patch）
 ├── logo.svg              # 启动页 Catppuccin logo
 └── assests/              # 截图素材
@@ -92,3 +93,4 @@ node --test
 ## 📄 许可
 
 [MIT](LICENSE)
+
