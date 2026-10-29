@@ -1,16 +1,15 @@
 # 🐱 dsh-catppuccin-x
 
-> DeepSeek Harness WebUI 个性化插件 —— Catppuccin 全 flavor 主题、强调色、自定义字体与品牌化首屏加载页。
+> DeepSeek Harness WebUI 个性化插件 —— Catppuccin 全 flavor 主题、强调色与品牌化首屏加载页。
 
-基于 [Catppuccin](https://catppuccin.com/) 官方调色板，为 DeepSeek Harness Web 界面提供完整的个性化能力：五套 flavor 主题（官方四套 + 自造浅色 Coldbrew）一键切换、六种强调色叠加、UI / 代码字体自定义，以及跟随所选 flavor 变色的启动加载页。设置通过 Host 设置文档持久化，重启后自动恢复，全程无需修改官方源码。
+基于 [Catppuccin](https://catppuccin.com/) 官方调色板，为 DeepSeek Harness Web 界面提供完整的个性化能力：五套 flavor 主题（官方四套 + 自造浅色 Coldbrew）一键切换、六种强调色叠加，以及跟随所选 flavor 变色的启动加载页。设置通过 Host 设置文档持久化，重启后自动恢复，全程无需修改官方源码。字体不在此插件范围（DSH 原生设置「通用 → 更多字体设置」已支持正文 / 代码 / 终端字体）。
 
 ## ✨ 功能特性
 
 - **五套 Catppuccin flavor 主题**：Latte（浅色）/ Coldbrew（浅色，本项目自造）/ Frappé / Macchiato / Mocha（深色），完整映射 DSW 主题 token（`--dsw-*` alias 全量覆盖）
 - **Coldbrew（冷萃）**：基于 Latte 重做的浅色 flavor —— 底色从中性灰换成近白冷调（base `#fbfcfe`、侧栏 `#f1f6fc`），浅色模式的边框 / chip / 代码底改用冷蓝灰 veil（`#5b76a8`）而不是灰字混色，整屏去灰提亮；正文对比度 8.68:1（Latte 为 7.45:1），观感清爽、干净
 - **六种强调色**：淡紫 / 蓝 / 绿 / 蜜桃 / 红 / 粉，基于 `theme.overrideTokens` 叠加层实现，可叠加在任意活动主题之上
-- **自定义字体**：界面字体（UI）与代码字体（Code）分别填写 font-family 列表，覆盖 `:root` 字体变量，带实时预览
-- **品牌字标跟随强调色**：顶部 "harness" 品牌徽章自动采用当前强调色，深色 flavor 下依然清晰可读
+- **品牌字标跟随强调色**：顶部 "harness" 品牌徽章自动采用当前强调色；徽章字色按 WCAG 对比度阈值（`onColor()`）在浅色字 / 深色字之间二选一 —— 深字须明显更清楚才启用，所以橙底蜜桃拿到浅色字、浅粉底粉红仍拿深色字，深浅 flavor 都不再出现「深字压深底」
 - **品牌化首屏加载页**：内联 Catppuccin logo + 四个呼吸点，随已保存的 flavor 自动变色，logo 缺失时安全降级为默认加载页
 - **设置面板「Catppuccin」**：在 Web 设置页注册专属分区，设置经 Typert RPC 持久化到 Host 设置文档，刷新 / 重启自动恢复
 - **兼容内置同名主题**：与 DSH 内置 Catppuccin 主题共存时自动跳过重复注册，不冲突
@@ -61,35 +60,24 @@ pnpm add dsh-catppuccin-x
 打开 Web 设置页，左侧选择 **Catppuccin** 分区：
 
 1. **主题**：点击 Latte / Coldbrew / Frappé / Macchiato / Mocha 卡片切换 flavor（同步改变启动页配色）
-2. **强调色**：点击色点选择强调色，品牌主色、按钮、选中态等同步变化
-3. **字体**：在「界面字体 (UI)」「代码字体 (Code)」输入框中填写 font-family 列表（逗号分隔），回车或点击「应用」生效，可随时「重置字体为默认」
+2. **强调色**：点击色点选择强调色，品牌主色、按钮、选中态、品牌徽章同步变化
 
 所有设置自动保存，刷新页面或重启 Web 后仍然保留。
 
-**推荐字体**（可直接复制到设置页输入框）：
-
-- 界面字体 (UI)：
-
-  ```
-  "Literata", "LXGW WenKai", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
-  ```
-
-- 代码字体 (Code)：
-
-  ```
-  Hasklig Nerd Font
-  ```
+> 字体（正文 / 代码 / 终端）请使用 DSH 原生设置 **设置 → 通用 → 更多字体设置**；插件不再覆盖 `:root` 字体变量，旧版本保存在插件设置里的字体字段会被忽略。
 
 ## 🛠 开发
 
 ```
 ├── lib/
 │   ├── index.js          # 宿主半：设置命名空间注册 + catppuccinTheme 服务 + splash 注入
-│   ├── client.js         # 浏览器端：flavor 注册 / 强调色叠加 / 字体覆盖 / 设置面板
+│   ├── client.js         # 浏览器端：flavor 注册 / 强调色叠加 / 徽章前景阈值 / 设置面板
 │   ├── splash.js         # 首屏加载页纯函数模块（可独立测试）
 │   └── typert.host.js    # Typert RPC 清单（与客户端 remote 调用一一对应）
 ├── test/
-│   └── splash.test.js    # splash 模块回归测试
+│   ├── splash.test.js    # splash 模块回归测试
+│   ├── client.test.js    # 样式归属契约回归
+│   └── theme.test.js     # 字体下线 + 徽章前景色阈值回归
 ├── cordis.patch.yml      # profile 层插入声明（bundle patch）
 ├── logo.svg              # 启动页 Catppuccin logo
 └── assests/              # 截图素材
@@ -98,7 +86,7 @@ pnpm add dsh-catppuccin-x
 运行测试：
 
 ```bash
-node --test test/splash.test.js
+node --test
 ```
 
 ## 📄 许可

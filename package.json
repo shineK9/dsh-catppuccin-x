@@ -1,7 +1,7 @@
 {
   "name": "dsh-catppuccin-x",
-  "version": "0.3.0",
-  "description": "WebUI 个性化插件：Catppuccin 全 flavor 主题（Latte/Coldbrew/Frappé/Macchiato/Mocha，Coldbrew 为自造浅色 flavor）、强调色、UI/代码字体手动填写；设置通过 Host 设置文档持久化，重启后自动恢复。",
+  "version": "0.4.0",
+  "description": "WebUI 个性化插件：Catppuccin 全 flavor 主题（Latte/Coldbrew/Frappé/Macchiato/Mocha，Coldbrew 为自造浅色 flavor）、强调色与品牌化首屏加载页；设置通过 Host 设置文档持久化，重启后自动恢复。",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -31,8 +31,7 @@
     "dsh-plugin",
     "catppuccin",
     "coldbrew",
-    "theme",
-    "font"
+    "theme"
   ],
   "dsh": {
     "bundle": {

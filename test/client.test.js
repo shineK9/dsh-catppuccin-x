@@ -140,7 +140,7 @@ test('the sheet is inserted at module scope, never from apply', async () => {
   assert.ok(at < applied, 'the insertion must run at materialization, before the plugin is applied')
 })
 
-test('dynamic sheets (fonts / sidebar / shimmer) carry the owner tag too', async () => {
+test('dynamic sheets (sidebar / shimmer) carry the owner tag too', async () => {
   const definition = await loadBundle()
   await withStyleDom(async (dom) => {
     const plugin = definition.factory(requireStub)
